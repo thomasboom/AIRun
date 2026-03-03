@@ -16,18 +16,30 @@ AIRun detects installed AI CLIs on your system and lets you pick one from an int
 
 | Tool | Command | Description |
 |------|---------|-------------|
-| OpenCode | `opencode` | Open source AI coding agent |
-| Kilo | `kilo` | Interactive CLI coding assistant |
-| Cline | `cline` | Autonomous coding agent |
-| Cursor CLI | `agent` | Cursor AI agent CLI |
-| Gemini CLI | `gemini` | Google Gemini AI assistant |
-| Qwen | `qwen` | Alibaba Qwen AI assistant |
-| Claude CLI | `claude` | Anthropic Claude AI assistant |
-| Copilot CLI | `copilot-cli` | GitHub Copilot for terminal |
-| Ollama | `ollama` | Run LLMs locally |
-| LM Studio | `lmstudio` | Local LLM runner |
-| Mistral Vibe CLI | `vibe` | Mistral AI assistant |
-| Codex | `codex` | CLI made by OpenAI |
+| OpenCode | `opencode` | Made by OpenCode |
+| Kilo | `kilo` | Made by Kilo |
+| Cline | `cline` | Made by Rethink |
+| Cursor CLI | `agent` | Made by Cursor |
+| Gemini CLI | `gemini` | Made by Google |
+| Qwen | `qwen` | Made by Alibaba |
+| Claude CLI | `claude` | Made by Anthropic |
+| Copilot CLI | `copilot-cli` | Made by GitHub/Microsoft |
+| Ollama | `ollama` | Made by Ollama |
+| LM Studio | `lmstudio` | Made by LM Studio |
+| Mistral Vibe CLI | `vibe` | Made by Mistral AI |
+| Codex | `codex` | Made by OpenAI |
+| Amp | `amp` | Made by Amp |
+| Auggie CLI | `auggie` | Made by Auggie |
+| Autohand Code | `autohand` | Made by Autohand |
+| CodeBuddy Code | `codebuddy` | Made by CodeBuddy |
+| Corust Agent | `corust` | Made by Corust |
+| Factory Droid | `droid` | Made by Factory AI |
+| GitHub Copilot CLI | `gh copilot` | Made by Microsoft |
+| Junie | `junie` | Made by JetBrains |
+| Kimi CLI | `kimi` | Made by Moonshot AI |
+| Qodo CLI | `qodo` | Made by Qodo |
+| Stakpak | `stakpak` | Made by Stakpak |
+| Goose | `goose session` | Made by Scale AI |
 
 ## Installation
 
