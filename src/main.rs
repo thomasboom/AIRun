@@ -11,6 +11,7 @@ use which::which;
 struct AiTool {
     name: &'static str,
     command: &'static str,
+    args: Option<&'static [&'static str]>,
     description: &'static str,
 }
 
@@ -18,62 +19,146 @@ const TOOLS: &[AiTool] = &[
     AiTool {
         name: "OpenCode",
         command: "opencode",
-        description: "Open source AI coding agent",
+        args: None,
+        description: "Made by OpenCode",
     },
     AiTool {
         name: "Kilo",
         command: "kilo",
-        description: "Interactive CLI coding assistant",
+        args: None,
+        description: "Made by Kilo",
     },
     AiTool {
         name: "Cline",
         command: "cline",
-        description: "Autonomous coding agent",
+        args: None,
+        description: "Made by Rethink",
     },
     AiTool {
         name: "Cursor CLI",
         command: "agent",
-        description: "Cursor AI agent CLI",
+        args: None,
+        description: "Made by Cursor",
     },
     AiTool {
         name: "Gemini CLI",
         command: "gemini",
-        description: "Google Gemini AI assistant",
+        args: None,
+        description: "Made by Google",
     },
     AiTool {
         name: "Qwen",
         command: "qwen",
-        description: "Alibaba Qwen AI assistant",
+        args: None,
+        description: "Made by Alibaba",
     },
     AiTool {
         name: "Claude CLI",
         command: "claude",
-        description: "Anthropic Claude AI assistant",
+        args: None,
+        description: "Made by Anthropic",
     },
     AiTool {
         name: "Copilot CLI",
         command: "copilot-cli",
-        description: "GitHub Copilot for terminal",
+        args: None,
+        description: "Made by GitHub/Microsoft",
     },
     AiTool {
         name: "Ollama",
         command: "ollama",
-        description: "Run LLMs locally",
+        args: None,
+        description: "Made by Ollama",
     },
     AiTool {
         name: "LM Studio",
         command: "lmstudio",
-        description: "Local LLM runner",
+        args: None,
+        description: "Made by LM Studio",
     },
     AiTool {
         name: "Mistral Vibe CLI",
         command: "vibe",
-        description: "Mistral AI assistant",
+        args: None,
+        description: "Made by Mistral AI",
     },
     AiTool {
         name: "Codex",
         command: "codex",
-        description: "CLI made by OpenAI",
+        args: None,
+        description: "Made by OpenAI",
+    },
+    AiTool {
+        name: "Amp",
+        command: "amp",
+        args: None,
+        description: "Made by Amp",
+    },
+    AiTool {
+        name: "Auggie CLI",
+        command: "auggie",
+        args: None,
+        description: "Made by Auggie",
+    },
+    AiTool {
+        name: "Autohand Code",
+        command: "autohand",
+        args: None,
+        description: "Made by Autohand",
+    },
+    AiTool {
+        name: "CodeBuddy Code",
+        command: "codebuddy",
+        args: None,
+        description: "Made by CodeBuddy",
+    },
+    AiTool {
+        name: "Corust Agent",
+        command: "corust",
+        args: None,
+        description: "Made by Corust",
+    },
+    AiTool {
+        name: "Factory Droid",
+        command: "droid",
+        args: None,
+        description: "Made by Factory AI",
+    },
+    AiTool {
+        name: "GitHub Copilot CLI",
+        command: "gh",
+        args: Some(&["copilot"]),
+        description: "Made by Microsoft",
+    },
+    AiTool {
+        name: "Junie",
+        command: "junie",
+        args: None,
+        description: "Made by JetBrains",
+    },
+    AiTool {
+        name: "Kimi CLI",
+        command: "kimi",
+        args: None,
+        description: "Made by Moonshot AI",
+    },
+    AiTool {
+        name: "Qodo CLI",
+        command: "qodo",
+        args: None,
+        description: "Made by Qodo",
+    },
+    AiTool {
+        name: "Stakpak",
+        command: "stakpak",
+        args: None,
+        description: "Made by Stakpak",
+    },
+    AiTool {
+        name: "Goose",
+        command: "goose",
+        args: Some(&["session"]),
+        description: "Made by Scale AI",
     },
 ];
 
@@ -87,11 +172,12 @@ struct Args {
     args: Vec<String>,
 }
 
-fn run_tool(command: &str, args: &[String]) -> Result<()> {
-    let mut child = Command::new(command)
-        .args(args)
-        .env("TERM", "xterm-256color")
-        .spawn()?;
+fn run_tool(command: &str, prepended_args: &[&str], user_args: &[String]) -> Result<()> {
+    let mut cmd = Command::new(command);
+    cmd.args(prepended_args)
+        .args(user_args)
+        .env("TERM", "xterm-256color");
+    let mut child = cmd.spawn()?;
     child.wait()?;
     Ok(())
 }
@@ -116,6 +202,8 @@ fn find_tool_by_name(name: &str) -> Option<AiTool> {
                 || t.name.to_lowercase() == name_lower
                 || t.name.to_lowercase().replace(' ', "") == name_lower
                 || t.name.to_lowercase().replace(" cli", "") == name_lower
+                || (t.args.is_some()
+                    && format!("{} {}", t.command, t.args.unwrap().join(" ")) == name_lower)
         })
         .copied()
 }
@@ -139,8 +227,9 @@ fn main() -> Result<()> {
             bail!("Tool '{}' is not installed or not in PATH", tool.name);
         }
 
+        let prepended_args: Vec<&str> = tool.args.map(|a| a.to_vec()).unwrap_or_default();
         println!("Launching {}...\n", tool.name.cyan().bold());
-        run_tool(tool.command, &args.args)?;
+        run_tool(tool.command, &prepended_args, &args.args)?;
         return Ok(());
     }
 
@@ -168,8 +257,9 @@ fn main() -> Result<()> {
         .interact()?;
 
     let tool = &installed[selection];
+    let prepended_args: Vec<&str> = tool.args.map(|a| a.to_vec()).unwrap_or_default();
     println!("\n  Launching {}...\n", tool.name.cyan().bold());
-    run_tool(tool.command, &[])?;
+    run_tool(tool.command, &prepended_args, &[])?;
     println!("\n  Returned from {}.\n", tool.name.cyan());
     Ok(())
 }
